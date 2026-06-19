@@ -5,6 +5,7 @@
   tasks:
 
     - name: install httpd package and update cache
+      tags: RHEL,httpd
       package:
         name: 
           - "{{ http_package }}" 
