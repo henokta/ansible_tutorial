@@ -2,21 +2,21 @@
 
 - hosts: all
   become: yes
-  tasks:
+  pre_tasks:
 
-    - name: install httpd package and update cache
-      tags: RHEL,httpd
-      package:
-        name: 
-          - "{{ http_package }}" 
-          - "{{ php_package }}"
-        state: latest 
-        update_cache: yes
+  - name: update repository index
+    tags: always
+    package:
+      update_cache: yes
+    changed_when: false
 
-    - name: copy default html file for site
-      tags: httpd, RHEL
-      copy:
-        src: default_site.html
-        dest: /var/www/html/index.html
-        owner: root
-        mode: 0644
+- hosts: all
+  become: true
+  roles:
+    - base
+
+- hosts: webserver
+  become: true
+  roles:
+    - web_servers
+

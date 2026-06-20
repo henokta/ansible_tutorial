@@ -1,1 +1,2 @@
-10.10.13.119 http_package=httpd php_package=php
+[webserver]
+10.10.13.119
