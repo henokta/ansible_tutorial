@@ -1,0 +1,41 @@
+- name: install httpd package and update cache
+  tags: RHEL,httpd
+  package:
+    name:
+      - httpd 
+      - php 
+    state: latest
+    update_cache: yes
+
+- name: start httpd (RHEL)
+  tags: httpd,RHEL
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+  when: ansible_distribution == "RedHat"
+
+- name: change e-mail address for admin
+  tags: httpd,RHEL
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^ServerAdmin'
+    line: ServerAdmin awashadmin@awashbank.com
+  when: ansible_distribution == "RedHat"
+  register: httpd
+
+- name: restart httpd (RHEL)
+  tags: httpd,RHEL
+  service:
+    name: httpd
+    state: restarted
+  when: httpd.changed
+
+- name: copy default html file for site
+  tags: httpd, RHEL, html
+  copy:
+    src: default_site.html
+    dest: /var/www/html/index.html
+    owner: root
+    mode: 0644
+

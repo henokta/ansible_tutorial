@@ -1,0 +1,4 @@
+- name: Add ssh key for Henok
+  authorized_key:
+    user: henok
+    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGctDF1AeZX56YgYi798joYNhZnJIYN2yRjNu6b0vsT5 Henok Default"
