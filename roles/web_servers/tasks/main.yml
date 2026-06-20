@@ -2,15 +2,15 @@
   tags: RHEL,httpd
   package:
     name:
-      - httpd 
-      - php 
+      - "{{ apache_package_name }}" 
+      - "{{ php_package_name }}" 
     state: latest
     update_cache: yes
 
 - name: start httpd (RHEL)
   tags: httpd,RHEL
   service:
-    name: httpd
+    name: "{{ apache_service }}"
     state: started
     enabled: yes
   when: ansible_distribution == "RedHat"
@@ -20,16 +20,9 @@
   lineinfile:
     path: /etc/httpd/conf/httpd.conf
     regexp: '^ServerAdmin'
-    line: ServerAdmin awashadmin@awashbank.com
+    line: ServerAdmin adminansible@awashbank.com
   when: ansible_distribution == "RedHat"
-  register: httpd
-
-- name: restart httpd (RHEL)
-  tags: httpd,RHEL
-  service:
-    name: httpd
-    state: restarted
-  when: httpd.changed
+  notify: restart_apache
 
 - name: copy default html file for site
   tags: httpd, RHEL, html
